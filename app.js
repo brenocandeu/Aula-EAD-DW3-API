@@ -68,6 +68,32 @@ app.post('/salas', (req, res) => {
   res.status(201).json(novaSala);
 });
 
+// [PUT] Atualiza sala existente
+app.put('/salas/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const index = salasDeAula.findIndex(s => s.salasdeaulaid === id);
+
+    if (index === -1) {
+        return res.status(404).json({ message: 'Sala de aula não encontrada.' });
+    }
+
+    salasDeAula[index] = { ...salasDeAula[index], ...req.body };
+    res.json(salasDeAula[index]);
+});
+
+// [DELETE] Deleta uma sala
+app.delete('/salas/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const index = salasDeAula.findIndex(s => s.salasdeaulaid === id);
+
+    if (index === -1) {
+        return res.status(404).json({ message: 'Sala de aula não encontrada.' });
+    }
+
+    salasDeAula[index].removido = true;
+    res.status(200).json({ message: 'Sala de aula removida com sucesso.' });
+});
+
 app.listen(port, () => {
   console.log('Executando a aplicação ', process.env.APP_NAME);
   console.log(`Servidor rodando na porta ${port}`);
